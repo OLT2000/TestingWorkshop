@@ -16,10 +16,7 @@ Scenario: Calculate the correct holiday entitlement for an employee who works re
     Then I should see the correct submitted answers
     And I should see the total entitlement hours
 
-Scenario: Calculate the correct holiday entitlement for an employee who works irregular hours
 
-Scenario: Displays the values that were inputted by the user on the summary page
 
-Scenario: Displays error when the user does not select a mandatory field
 
 Scenario: Updates calculation when value is edited

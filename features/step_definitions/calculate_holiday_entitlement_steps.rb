@@ -3,6 +3,10 @@ Given('I navigate to the homepage') do
     sleep 1
 end
 
+When('I select the option hours worked per week') do ||
+  // Write code here that turns the phrase above into concrete actions
+end
+
 And('I should see the homepage') do
     expect(page).to have_title 'Calculate holiday entitlement - GOV.UK'
     expect(page).to have_css 'h1.govuk-heading-xl'
