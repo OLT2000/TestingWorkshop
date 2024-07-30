@@ -1,5 +1,37 @@
 # features/support/footer_helper.rb
-module FooterHelper
+module TestHelper
+
+    def convert_number_to_date(number)
+        case number
+            when 1
+            "January"
+            when 2
+            "February"
+            when 3
+            "March"
+            when 4
+            "April"
+            when 5
+            "May"
+            when 6
+            "June"
+            when 7
+            "July"
+            when 8
+            "August"
+            when 9
+            "September"
+            when 10
+            "October"
+            when 11
+            "November"
+            when 12
+            "December"
+            else
+            "Invalid month number"
+            end
+        end
+
     def check_standard_footer
         expect(page).to have_css "h2.govuk-heading-m"
         expect(page).to have_css "a.govuk-footer__link"
@@ -32,6 +64,16 @@ module FooterHelper
             expect(page).to have_link(text)
         }
     end
+
+    def convert_to_integer_if_possible(decimal)
+        # Check if the decimal has no fractional part
+        if decimal % 1 == 0
+          # Convert to integer
+            decimal.to_i
+        else
+            decimal
+        end
+      end
 end
 
-World(FooterHelper)
+World(TestHelper)
