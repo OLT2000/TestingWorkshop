@@ -65,4 +65,14 @@ Feature: Numerical Input Errors handled correctly
         And I am provided with an error message telling me there are only 24 hours in a day.
         And I am given a link to re-answer the question
 
+    Scenario: Displays error when the user does not select a mandatory field
+        Given I navigate to the homepage
+        And I should see the homepage
+        When I click on the 'Start now' button
+        And I do not select an option for irregular work hours
+        And I click Continue
+        Then I do not redirect to a new page
+        And I am provided with an error message
+        And I am given a link to re-answer the question
+
     
