@@ -81,4 +81,23 @@ Feature: Numerical Input Errors handled correctly
         And I am provided with an error message
         And I am given a response link with text "Please answer this question"
 
-    
+ Scenario: User does not select a value for is the holiday entitlement based on
+        Given I navigate to the homepage
+        And I should see the homepage
+        When I click on the 'Start now' link
+        And I select option 'No' for 'Does the employee work irregular hours or for part of the year?'
+        And I click on the 'Continue' button
+        Then I do not redirect to a new page
+        And I am provided with an error message
+        And I am given a response link with text "Please answer this question"
+
+ Scenario: User does not select a value for Do you want to work out holiday:
+        Given I navigate to the homepage
+        And I should see the homepage
+        When I click on the 'Start now' link
+        And I select option 'No' for 'Does the employee work irregular hours or for part of the year?'
+        And I select option 'days worked per week' for 'Is the holiday entitlement based on:'
+        And I click on the 'Continue' button
+        Then I do not redirect to a new page
+        And I am provided with an error message
+        And I am given a response link with text "Please answer this question"
