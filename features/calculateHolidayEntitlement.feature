@@ -137,4 +137,27 @@ Scenario: Calculate the correct holiday entitlement for an employee who works ir
         Then I should see the correct submitted answers
         And I should see the total entitlement hours
 
+Scenario: Calculate the correct holiday entitlement for an employee who works irregular hours leave date passed - annualised hours
+        Given I navigate to the homepage
+        And I should see the homepage
+        When I click on the 'Start now' button
+        And I select the option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+        And I input 3 of 8 2023 for 'When does the leave year start?'
+        And I select the option 'annualised hours' for 'Is the holiday entitlement based on:'
+        And I select the option 'for a full leave year' for 'Do you want to work out holiday:'
+        Then I should see the correct submitted answers
+        And I should see the total entitlement hours
 
+
+Scenario: Calculate the correct holiday entitlement for an employee who works irregular hours leave date passed - compressed hours
+        Given I navigate to the homepage
+        And I should see the homepage
+        When I click on the 'Start now' button
+        And I select the option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+        And I input 3 of 8 2023 for 'When does the leave year start?'
+        And I select the option 'compressed hours' for 'Is the holiday entitlement based on:'
+        And I select the option 'for a full leave year' for 'Do you want to work out holiday:'
+        And I input 37.5 for 'Number of hours worked per week?'
+        And I input 5 for 'Number of days worked per week?'
+        Then I should see the correct submitted answers
+        And I should see the total entitlement hours
