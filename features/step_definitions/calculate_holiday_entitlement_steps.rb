@@ -16,20 +16,33 @@ And('I should see the homepage') do
     expect(page).to have_content 'Explore the topic'
     expect(page).to have_link 'Statutory leave and time off'
     expect(page).to have_link 'Holidays, time off, sick leave, maternity and paternity leave'
-end
-
-When ("I click on the 'Start now' button") do
-    click_link('Start now')
     @stored_answers = Hash.new
 end
 
-And ('I select the option {string} for {string}') do |input, question|
+When ("I click on the {string} link") do |button_text|
+    click_link(button_text)
+end
+
+When ("I click on the {string} button") do |button_text|
+    click_button(button_text)
+end
+
+And ('I select option {string} for {string}') do |input, question|
     check_standard_footer
     @stored_answers[question] = input
     @current_title ||= "#{question} - Calculate holiday entitlement - GOV.UK"
     expect(page).to have_title @current_title
     choose(input, allow_label_click: true)
     find_button('Continue').click
+end
+
+And ('I input {string} for {string}') do |input, question|
+    check_standard_footer
+    @stored_answers[question] = input
+    @current_title ||= "#{question} - Calculate holiday entitlement - GOV.UK"
+    expect(page).to have_title @current_title
+    fill_in("response",	with: input)
+    click_button('Continue')
 end
 
 And ('I input {float} for {string}') do |input, question|
@@ -64,6 +77,34 @@ And ('I am provided with an error message') do
     expect(page).to have_css("h2", class: "govuk-error-summary__title", text: "There is a problem")
 end
 
-And ('I am given a link to re-answer the open-text question') do
-    expect(page).to have_css("a", href: "#response")
+And ('I am given a response link with text {string}') do |link_text|
+    expect(page).to have_css("a", text: link_text)
 end
+
+And ('I want to change the value for {string}') do |question|
+    @new_stored_answers = Hash.new
+    page.all("a", text: "Change").each_with_index do |el, idx|
+        answer_key = @stored_answers.keys[idx]
+        if answer_key == question
+            el.click
+            break
+        end
+        @new_stored_answers[answer_key] = @stored_answers[answer_key]
+    end
+    # @stored_answers = new_stored_answers
+end
+
+Then ('I am redirected to the page for {string}') do |question|
+    expect(page).to have_title "#{question} - Calculate holiday entitlement - GOV.UK"
+end
+
+And ('The existing answers are saved') do
+    @new_stored_answers.each_pair do |key, value|
+        expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: key)
+        expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: value)
+    end
+    @stored_answers = @new_stored_answers
+end
+
+# And ('I change input value for {string} to {float}') do |question, new_value|
+# '"event_name": "form_change_response","type":"smart answer","section":"Does the employee work irregular hours or for part of the year?","action":"change response","tool_name":";Calculate holiday entitlement"}'
