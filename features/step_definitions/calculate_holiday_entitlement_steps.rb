@@ -106,5 +106,28 @@ And ('The existing answers are saved') do
     @stored_answers = @new_stored_answers
 end
 
-# And ('I change input value for {string} to {float}') do |question, new_value|
-# '"event_name": "form_change_response","type":"smart answer","section":"Does the employee work irregular hours or for part of the year?","action":"change response","tool_name":";Calculate holiday entitlement"}'
+And ('I input {float} of {float} {float} for {string}') do |day, month, year, question|
+    check_standard_footer
+    expect(page).to have_title "#{question} - Calculate holiday entitlement - GOV.UK"
+    day = convert_to_integer_if_possible(day)
+    month = convert_to_integer_if_possible(month)
+    year = convert_to_integer_if_possible(year)
+    fill_in('response-0', with: day)
+    fill_in('response-1', with: month)
+    fill_in('response-2', with: year)
+    @stored_answers[question] = "#{day} #{convert_number_to_date(month)} #{year}"
+    click_button('Continue')
+  end
+  
+# Then ('I should see the correct submitted answers') do
+#     check_standard_footer
+#     expect(page).to have_title 'Outcome - Calculate holiday entitlement - GOV.UK'
+#     @answers.each do |question, input|
+#     expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: question)
+#     expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: input)
+#     end
+#     @answers_irregular.each do |question, input|
+#     expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: question)
+#     expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: input)
+#     end
+# end

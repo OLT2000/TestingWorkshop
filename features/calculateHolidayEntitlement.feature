@@ -79,5 +79,3 @@ Feature: Calculate holiday entitlement
         And I input 5 for 'Number of days worked per week?'
         Then I should see the correct submitted answers
         And I should see 196 entitlement "hours"
-
-

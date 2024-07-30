@@ -101,3 +101,73 @@ Feature: Numerical Input Errors handled correctly
         Then I do not redirect to a new page
         And I am provided with an error message
         And I am given a response link with text "Please answer this question"
+
+Scenario: Handle month greater than 12
+    Given I navigate to the homepage
+    And I should see the homepage
+    When I click on the 'Start now' link
+    And I select option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+    And I input 1 of 13 2020 for 'When does the leave year start?'
+    Then I do not redirect to a new page
+    And I am provided with an error message
+    And I am given a response link with text "Please answer this question"
+
+Scenario: Handle month less than 0
+    Given I navigate to the homepage
+    And I should see the homepage
+    When I click on the 'Start now' link
+    And I select option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+    And I input 1 of 0 2020 for 'When does the leave year start?'
+    Then I do not redirect to a new page
+    And I am provided with an error message
+    And I am given a response link with text "Please answer this question"
+
+Scenario: Handle day greater than 32
+    Given I navigate to the homepage
+    And I should see the homepage
+    When I click on the 'Start now' link
+    And I select option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+    And I input 32 of 1 2020 for 'When does the leave year start?'
+    Then I do not redirect to a new page
+    And I am provided with an error message
+    And I am given a response link with text "Please answer this question"
+
+Scenario: Handle day less than 0
+    Given I navigate to the homepage
+    And I should see the homepage
+    When I click on the 'Start now' link
+    And I select option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+    And I input 0 of 11 2020 for 'When does the leave year start?'
+    Then I do not redirect to a new page
+    And I am provided with an error message
+    And I am given a response link with text "Please answer this question"
+
+Scenario: Handle decimal day
+    Given I navigate to the homepage
+    And I should see the homepage
+    When I click on the 'Start now' link
+    And I select option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+    And I input 1.5 of 10 2020 for 'When does the leave year start?'
+    Then I do not redirect to a new page
+    And I am provided with an error message
+    And I am given a response link with text "Please answer this question"
+
+Scenario: Handle decimal month
+    Given I navigate to the homepage
+    And I should see the homepage
+    When I click on the 'Start now' link
+    And I select option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+    And I input 1 of 8.5 2020 for 'When does the leave year start?'
+    Then I do not redirect to a new page
+    And I am provided with an error message
+    And I am given a response link with text "Please answer this question"
+
+Scenario: Handle decimal year
+    Given I navigate to the homepage
+    And I should see the homepage
+    When I click on the 'Start now' link
+    And I select option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+    And I input 1 of 6 2017.5 for 'When does the leave year start?'
+    Then I do not redirect to a new page
+    And I am provided with an error message
+    And I am given a response link with text "Please answer this question"
