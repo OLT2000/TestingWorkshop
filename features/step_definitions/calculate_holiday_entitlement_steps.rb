@@ -3,6 +3,7 @@ Given('I navigate to the homepage') do
     sleep 1
 end
 
+
 And('I should see the homepage') do
     check_standard_footer
     @current_title ||= 'Calculate holiday entitlement - GOV.UK'
@@ -34,6 +35,7 @@ And ('I select option {string} for {string}') do |input, question|
     expect(page).to have_title @current_title
     choose(input, allow_label_click: true)
     find_button('Continue').click
+    @answers[question] = input
 end
 
 And ('I input {string} for {string}') do |input, question|
@@ -52,7 +54,9 @@ And ('I input {float} for {string}') do |input, question|
     expect(page).to have_title @current_title
     fill_in("response",	with: input)
     click_button('Continue')
+    @answers[question] = input
 end
+
 
 Then ('I should see the correct submitted answers') do
     check_standard_footer
@@ -118,16 +122,4 @@ And ('I input {float} of {float} {float} for {string}') do |day, month, year, qu
     @stored_answers[question] = "#{day} #{convert_number_to_date(month)} #{year}"
     click_button('Continue')
   end
-  
-# Then ('I should see the correct submitted answers') do
-#     check_standard_footer
-#     expect(page).to have_title 'Outcome - Calculate holiday entitlement - GOV.UK'
-#     @answers.each do |question, input|
-#     expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: question)
-#     expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: input)
-#     end
-#     @answers_irregular.each do |question, input|
-#     expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: question)
-#     expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: input)
-#     end
-# end
+
