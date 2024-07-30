@@ -8,7 +8,7 @@ Feature: Error Messages when inputting month values
         And I click Continue
         Then I do not redirect to a new page
         And I am provided with an error message
-        And I am given a link to re-answer the question
+        And I am given a link to re-answer the open-text question
 
     Scenario: Handle month less than 1
         Given I navigate to the homepage

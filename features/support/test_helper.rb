@@ -1,5 +1,5 @@
 # features/support/footer_helper.rb
-module FooterHelper
+module TestHelper
     def check_standard_footer
         expect(page).to have_css "h2.govuk-heading-m"
         expect(page).to have_css "a.govuk-footer__link"
@@ -32,6 +32,15 @@ module FooterHelper
             expect(page).to have_link(text)
         }
     end
+    def convert_to_integer_if_possible(decimal)
+        # Check if the decimal has no fractional part
+        if decimal % 1 == 0
+          # Convert to integer
+            decimal.to_i
+        else
+            decimal
+        end
+      end
 end
 
-World(FooterHelper)
+World(TestHelper)

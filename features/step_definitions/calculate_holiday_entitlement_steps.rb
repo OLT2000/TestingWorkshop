@@ -5,7 +5,8 @@ end
 
 And('I should see the homepage') do
     check_standard_footer
-    expect(page).to have_title 'Calculate holiday entitlement - GOV.UK'
+    @current_title ||= 'Calculate holiday entitlement - GOV.UK'
+    expect(page).to have_title @current_title
     expect(page).to have_css 'h1.govuk-heading-xl'
     expect(page).to have_link 'Start now'
     expect(page).to have_content 'Use this tool to calculate holiday entitlement for:'
@@ -19,39 +20,50 @@ end
 
 When ("I click on the 'Start now' button") do
     click_link('Start now')
+    @stored_answers = Hash.new
 end
 
 And ('I select the option {string} for {string}') do |input, question|
     check_standard_footer
-    expect(page).to have_title "#{question} - Calculate holiday entitlement - GOV.UK"
+    @stored_answers[question] = input
+    @current_title ||= "#{question} - Calculate holiday entitlement - GOV.UK"
+    expect(page).to have_title @current_title
     choose(input, allow_label_click: true)
     find_button('Continue').click
 end
 
 And ('I input {float} for {string}') do |input, question|
     check_standard_footer
-    expect(page).to have_title "#{question} - Calculate holiday entitlement - GOV.UK"
+    @stored_answers[question] = input
+    @current_title ||= "#{question} - Calculate holiday entitlement - GOV.UK"
+    expect(page).to have_title @current_title
     fill_in("response",	with: input)
     click_button('Continue')
 end
 
 Then ('I should see the correct submitted answers') do
     check_standard_footer
-    expect(page).to have_title 'Outcome - Calculate holiday entitlement - GOV.UK'
-
-    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Does the employee work irregular hours or for part of the year?')
-    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Is the holiday entitlement based on:')
-    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Do you want to work out holiday:')
-    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Number of hours worked per week?')
-    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Number of days worked per week?')
-
-    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: 'No')
-    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: 'hours worked per week')
-    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: 'for a full leave year')
-    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: '37.5')
-    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: '5.0')
+    @current_title ||= 'Outcome - Calculate holiday entitlement - GOV.UK'
+    expect(page).to have_title @current_title
+    @stored_answers.each_pair do |key, value|
+        expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: key)
+        expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: value)
+    end
 end
 
-And ('I should see the total entitlement hours') do
-    expect(page).to have_css('div', class: 'summary', text: 'The statutory entitlement is 210 hours holiday.')
+And ('I should see {float} entitlement {string}') do |num, text|
+    expect(page).to have_text("#{convert_to_integer_if_possible(num)} #{text}")
+end
+
+Then ('I do not redirect to a new page') do
+    expect(page).to have_title @current_title
+end
+
+And ('I am provided with an error message') do 
+    expect(page).to have_css("div", id: "error-summary")
+    expect(page).to have_css("h2", class: "govuk-error-summary__title", text: "There is a problem")
+end
+
+And ('I am given a link to re-answer the open-text question') do
+    expect(page).to have_css("a", href: "#response")
 end
