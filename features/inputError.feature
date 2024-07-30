@@ -171,3 +171,33 @@ Scenario: Handle decimal year
     Then I do not redirect to a new page
     And I am provided with an error message
     And I am given a response link with text "Please answer this question"
+
+Scenario: Handle negative day
+    Given I navigate to the homepage
+    And I should see the homepage
+    When I click on the 'Start now' link
+    And I select option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+    And I input -1 of 10 2020 for 'When does the leave year start?'
+    Then I do not redirect to a new page
+    And I am provided with an error message
+    And I am given a response link with text "Please answer this question"
+
+Scenario: Handle negative month
+    Given I navigate to the homepage
+    And I should see the homepage
+    When I click on the 'Start now' link
+    And I select option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+    And I input 1 of -4 2020 for 'When does the leave year start?'
+    Then I do not redirect to a new page
+    And I am provided with an error message
+    And I am given a response link with text "Please answer this question"
+
+Scenario: Handle negative year
+    Given I navigate to the homepage
+    And I should see the homepage
+    When I click on the 'Start now' link
+    And I select option 'Yes' for 'Does the employee work irregular hours or for part of the year?'
+    And I input 1 of 6 -1234 for 'When does the leave year start?'
+    Then I do not redirect to a new page
+    And I am provided with an error message
+    And I am given a response link with text "Please answer this question"

@@ -20,8 +20,8 @@ And('I should see the homepage') do
     @stored_answers = Hash.new
 end
 
-When ("I click on the {string} link") do |button_text|
-    click_link(button_text)
+When ("I click on the {string} link") do |link_text|
+    click_link(link_text)
 end
 
 When ("I click on the {string} button") do |button_text|
@@ -121,3 +121,8 @@ And ('I input {float} of {float} {float} for {string}') do |day, month, year, qu
     click_button('Continue')
   end
 
+  Then ('I am redircted to the {string} page') do |page_title|
+    check_standard_footer
+    @current_title ||= "#{page_title} - Calculate holiday entitlement - GOV.UK"
+    expect(page).to have_title @current_title
+  end
