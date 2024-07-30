@@ -35,7 +35,6 @@ And ('I select option {string} for {string}') do |input, question|
     expect(page).to have_title @current_title
     choose(input, allow_label_click: true)
     find_button('Continue').click
-    @answers[question] = input
 end
 
 And ('I input {string} for {string}') do |input, question|
@@ -54,7 +53,6 @@ And ('I input {float} for {string}') do |input, question|
     expect(page).to have_title @current_title
     fill_in("response",	with: input)
     click_button('Continue')
-    @answers[question] = input
 end
 
 
