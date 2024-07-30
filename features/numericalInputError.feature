@@ -6,7 +6,7 @@ Feature: Numerical Input Errors handled correctly
         And I select the option 'no' for working irregular hours
         And I select the option 'days worked per week'
         And I select the option 'for a full leave year'
-        And I input '7.5' days worked per week
+        And I input 7.5 days worked per week
         And I click Continue
         Then I do not redirect to a new page
         And I am provided with an error message

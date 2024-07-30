@@ -21,49 +21,37 @@ When ("I click on the 'Start now' button") do
     click_link('Start now')
 end
 
-And("I select the option no for working irregular hours") do
+And ('I select the option {string} for {string}') do |input, question|
     check_standard_footer
-    choice('No', allow_label_click: true)
-    click_button('')
+    expect(page).to have_title "#{question} - Calculate holiday entitlement - GOV.UK"
+    choose(input, allow_label_click: true)
+    find_button('Continue').click
 end
 
-And ('I select the option hours worked per week') do
+And ('I input {float} for {string}') do |input, question|
     check_standard_footer
-    choose("hours worked per week")
-    click_button('Continue')
-end
-
-And ('I select the option for a full leave year') do
-    click_on('for a full leave year')
-    click_button('Continue')
-end
-
-And ('I input 37.5 hours worked per week') do
-    fill_in("id#response",	with: "37.5" )
-    click_button('Continue')
-end
-
-And ('I input 5 days worked per week') do
-    fill_in("id#response",	with: "5" )
+    expect(page).to have_title "#{question} - Calculate holiday entitlement - GOV.UK"
+    fill_in("response",	with: input)
     click_button('Continue')
 end
 
 Then ('I should see the correct submitted answers') do
-    expect(page).to have_css('dt#govuk-summary-list__key', :text => 'Does the employee work irregular hours or for part of the year?')
-    expect(page).to have_css('dt#govuk-summary-list__key', :text => 'Is the holiday entitlement based on:')
-    expect(page).to have_css('dt#govuk-summary-list__key', :text => 'Do you want to work out holiday:')
-    expect(page).to have_css('dt#govuk-summary-list__key', :text => 'Number of hours worked per week?')
-    expect(page).to have_css('dt#govuk-summary-list__key', :text => 'Number of days worked per week?')
+    check_standard_footer
+    expect(page).to have_title 'Outcome - Calculate holiday entitlement - GOV.UK'
 
-    expect(page).to have_css('dt#govuk-summary-list__value', :text => 'No')
-    expect(page).to have_css('dt#govuk-summary-list__key', :text => 'hours worked per week')
-    expect(page).to have_css('dt#govuk-summary-list__key', :text => 'for a full leave year	')
-    expect(page).to have_css('dt#govuk-summary-list__key', :text => '37.5')
-    expect(page).to have_css('dt#govuk-summary-list__key', :text => 'Does the employee work irregular hours or for part of the year?')
+    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Does the employee work irregular hours or for part of the year?')
+    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Is the holiday entitlement based on:')
+    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Do you want to work out holiday:')
+    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Number of hours worked per week?')
+    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Number of days worked per week?')
 
-
+    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: 'No')
+    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: 'hours worked per week')
+    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: 'for a full leave year')
+    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: '37.5')
+    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: '5.0')
 end
 
 And ('I should see the total entitlement hours') do
-    
+    expect(page).to have_css('div', class: 'summary', text: 'The statutory entitlement is 210 hours holiday.')
 end
