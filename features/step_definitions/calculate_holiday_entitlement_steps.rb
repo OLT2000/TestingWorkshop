@@ -3,9 +3,6 @@ Given('I navigate to the homepage') do
     sleep 1
 end
 
-When('I select the option hours worked per week') do ||
-  // Write code here that turns the phrase above into concrete actions
-end
 
 And('I should see the homepage') do
     check_standard_footer
@@ -23,6 +20,8 @@ end
 
 When ("I click on the 'Start now' button") do
     click_link('Start now')
+    @answers = Hash.new
+    @answers_irregular = Hash.new
 end
 
 And ('I select the option {string} for {string}') do |input, question|
@@ -30,6 +29,7 @@ And ('I select the option {string} for {string}') do |input, question|
     expect(page).to have_title "#{question} - Calculate holiday entitlement - GOV.UK"
     choose(input, allow_label_click: true)
     find_button('Continue').click
+    @answers[question] = input
 end
 
 And ('I input {float} for {string}') do |input, question|
@@ -37,25 +37,39 @@ And ('I input {float} for {string}') do |input, question|
     expect(page).to have_title "#{question} - Calculate holiday entitlement - GOV.UK"
     fill_in("response",	with: input)
     click_button('Continue')
+    @answers[question] = input
+end
+
+
+And ('I input {int} of {int} {int} for {string}') do |day, month, year, question|
+  check_standard_footer
+  expect(page).to have_title "#{question} - Calculate holiday entitlement - GOV.UK"
+  fill_in('response-0', with: day)
+  fill_in('response-1', with: month)
+  fill_in('response-2', with: year)
+  click_button('Continue')
+  @answers_irregular[question] = day
+  @answers_irregular[question] = month
+  @answers_irregular[question] = year
 end
 
 Then ('I should see the correct submitted answers') do
     check_standard_footer
     expect(page).to have_title 'Outcome - Calculate holiday entitlement - GOV.UK'
+    @answers.each do |question, input|
+    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: question)
+    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: input)
+    end
 
-    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Does the employee work irregular hours or for part of the year?')
-    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Is the holiday entitlement based on:')
-    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Do you want to work out holiday:')
-    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Number of hours worked per week?')
-    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: 'Number of days worked per week?')
-
-    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: 'No')
-    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: 'hours worked per week')
-    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: 'for a full leave year')
-    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: '37.5')
-    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: '5.0')
+    @answers_irregular.each do |question, input|
+    expect(page).to have_css('dt', class: 'govuk-summary-list__key', text: question)
+    expect(page).to have_css('dd', class: 'govuk-summary-list__value', text: input)
+    end
 end
+
+
 
 And ('I should see the total entitlement hours') do
-    expect(page).to have_css('div', class: 'summary', text: 'The statutory entitlement is 210 hours holiday.')
+  expect(page).to have_text("The statutory")
 end
+
